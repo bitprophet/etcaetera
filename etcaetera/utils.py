@@ -1,5 +1,5 @@
-from etcaetera.formatters import environ
-from etcaetera.exceptions import MalformationError
+from .formatters import environ
+from .exceptions import MalformationError
 
 
 def format_key(key):

@@ -5,8 +5,8 @@ try:
 except ImportError:
     pass
 
-from etcaetera.utils import is_nested_key
-from etcaetera.formatters import uppercased
+from ..utils import is_nested_key
+from ..formatters import uppercased
 
 
 Tree = lambda: defaultdict(Tree)

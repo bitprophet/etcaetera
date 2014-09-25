@@ -1,5 +1,5 @@
-from etcaetera.adapter.base import Adapter
-from etcaetera.utils import format_key
+from .base import Adapter
+from ..utils import format_key
 
 
 class Defaults(Adapter):

@@ -1,7 +1,7 @@
 from collections import deque, namedtuple
 
-from etcaetera.formatters import uppercased
-from etcaetera.adapter import (
+from .formatters import uppercased
+from .adapter import (
     Adapter,
     AdapterSet,
     Defaults,

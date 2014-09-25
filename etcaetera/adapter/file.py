@@ -1,9 +1,9 @@
 import os
 import imp
 
-from etcaetera.adapter.base import Adapter
-from etcaetera.utils import format_key
-from etcaetera.constants import (
+from .base import Adapter
+from ..utils import format_key
+from ..constants import (
     JSON_EXTENSIONS,
     YAML_EXTENSIONS,
     PYTHON_EXTENSIONS

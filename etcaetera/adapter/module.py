@@ -1,6 +1,6 @@
 import types
 
-from etcaetera.adapter.base import Adapter
+from .base import Adapter
 
 
 class Module(Adapter):
