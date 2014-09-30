@@ -109,6 +109,13 @@ class TestFile:
 
         assert "should_be_ignored" not in fadapter.data
 
+    def test_load_with_python_uppercase_False_accepts_lowercased_locales(self, pysettings_file):
+        fadapter = File(pysettings_file.name, python_uppercase=False)
+        fadapter.load(formatter=lambda x: x) # No auto-uppercase here either
+
+        assert "ABC" in fadapter.data
+        assert "should_be_ignored" in fadapter.data
+
     def test_load_with_non_existing_file_in_strict_mode_raises(self):
         with pytest.raises(IOError):
             fadapter = File('/tmp/does/not/exist')  # Here safe is False
