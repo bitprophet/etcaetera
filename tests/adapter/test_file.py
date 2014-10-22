@@ -116,6 +116,9 @@ class TestFile:
         assert "ABC" in fadapter.data
         assert "should_be_ignored" in fadapter.data
 
+        # Special vars should also be skipped in this case!
+        assert "__builtins__" not in fadapter.data
+
     def test_load_with_non_existing_file_in_strict_mode_raises(self):
         with pytest.raises(IOError):
             fadapter = File('/tmp/does/not/exist')  # Here safe is False
