@@ -85,7 +85,7 @@ class Config(dict):
         for adapter in self.adapters:
             adapter.load(formatter=self.formatter)
             formatted_adapter_data = dict((self.formatter(k), v) for k, v in adapter.data.items())
-            self.update(formatted_adapter_data)
+            _merge(base=self, updates=formatted_adapter_data)
 
         # Subconfigs loading
         for subconfig in self._subconfigs.values():
@@ -96,3 +96,19 @@ class Config(dict):
 
             subconfig.load()
 
+def _merge(base, updates):
+    """
+    Recursively merge dict ``updates`` into dict ``base`` (mutating ``base``.)
+
+    * Values which are themselves dicts will be recursed into.
+    * Values which are a dict in one input and *not* a dict in the other input
+      (e.g. if our inputs were ``{'foo': 5}`` and ``{'foo': {'bar': 5}}``) are
+      irreconciliable and will generate an exception.
+    """
+    for key, value in updates.iteritems():
+        # Dict values whose keys also exist in 'base' -> recurse
+        if key in base and isinstance(value, dict):
+            _merge(base[key], value)
+        # All other values overwrite
+        else:
+            base[key] = value
