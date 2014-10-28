@@ -107,7 +107,7 @@ def _merge(base, updates):
       (e.g. if our inputs were ``{'foo': 5}`` and ``{'foo': {'bar': 5}}``) are
       irreconciliable and will generate an exception.
     """
-    for key, value in updates.iteritems():
+    for key, value in updates.items():
         # Dict values whose keys also exist in 'base' -> recurse
         # (But only if both types are dicts.)
         if key in base:
