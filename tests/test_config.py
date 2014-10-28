@@ -11,6 +11,7 @@ from etcaetera.adapter import (
     File,
     Env
 )
+from etcaetera.exceptions import AmbiguousMergeError
 
 
 class TestConfig:
@@ -255,3 +256,25 @@ class TestConfig:
         assert c['TOP']['DEFAULTKEY'] == 'YAY-DEFAULTS'
         assert c['TOP']['OVERRIDEKEY'] == 'YAY-OVERRIDES'
         assert c['TOP']['SHAREDKEY'] == 'OVERRIDEVAL'
+
+    def test_load_merging_refuses_to_change_type_to_dict(self):
+        d = Defaults({'TOP': 'not a dict'})
+        o = Overrides({'TOP': {'SUB': 'VALUE'}})
+        c = Config(defaults=d, overrides=o)
+        with pytest.raises(AmbiguousMergeError):
+            c.load()
+
+    def test_load_merging_refuses_to_change_type_from_dict(self):
+        d = Defaults({'TOP': {'SUB': 'VALUE'}})
+        o = Overrides({'TOP': 'not a dict'})
+        c = Config(defaults=d, overrides=o)
+        with pytest.raises(AmbiguousMergeError):
+            c.load()
+
+    def test_load_merging_applies_formatting_recursively(self):
+        d = Defaults({'TOP': {'SUB': 'value'}})
+        c = Config(defaults=d, formatter=lambda x: 'sentinel')
+        c.load()
+        assert 'sentinel' in c
+        assert 'SUB' not in c['sentinel']
+        assert c['sentinel']['sentinel'] == 'value'
