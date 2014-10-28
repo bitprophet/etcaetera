@@ -131,3 +131,7 @@ class TestFile:
         fadapter.load()
 
         assert fadapter.data == {}
+
+
+    def test_useful_str_output(self):
+        assert str(File('myfilepath')) == "File('myfilepath')"
