@@ -12,7 +12,7 @@ from etcaetera.constants import (
 
 class File(Adapter):
     def __init__(self, filepath, *args, **kwargs):
-        self.filepath = filepath
+        self.filepath = os.path.expanduser(filepath)
 
         # If strict parameter (inherited from parent) is True,
         # strictness_check routine will be called
