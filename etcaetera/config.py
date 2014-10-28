@@ -1,6 +1,7 @@
 from collections import deque, namedtuple
 
 from etcaetera.formatters import uppercased
+from etcaetera.exceptions import AmbiguousMergeError
 from etcaetera.adapter import (
     Adapter,
     AdapterSet,
@@ -96,6 +97,7 @@ class Config(dict):
 
             subconfig.load()
 
+
 def _merge(base, updates):
     """
     Recursively merge dict ``updates`` into dict ``base`` (mutating ``base``.)
@@ -107,8 +109,26 @@ def _merge(base, updates):
     """
     for key, value in updates.iteritems():
         # Dict values whose keys also exist in 'base' -> recurse
-        if key in base and isinstance(value, dict):
-            _merge(base[key], value)
-        # All other values overwrite
+        # (But only if both types are dicts.)
+        if key in base:
+            if isinstance(value, dict):
+                if isinstance(base[key], dict):
+                    _merge(base[key], value)
+                else:
+                    raise _merge_error(base[key], value)
+            else:
+                if isinstance(base[key], dict):
+                    raise _merge_error(base[key], value)
+                else:
+                    base[key] = value
+        # New values just get set straight
         else:
             base[key] = value
+
+def _merge_error(orig, new_):
+    return AmbiguousMergeError("Can't cleanly merge {0} with {1}".format(
+        _format_mismatch(orig), _format_mismatch(new_)
+    ))
+
+def _format_mismatch(x):
+    return "{0} ({1!r})".format(type(x), x)
