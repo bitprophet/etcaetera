@@ -121,3 +121,13 @@ class TestFile:
         fadapter.load()
 
         assert fadapter.data == {}
+
+    def test_offers_found_flag(self, yaml_file):
+        f1 = File(yaml_file.name)
+        assert not f1.found
+        f1.load()
+        assert f1.found
+        f2 = File('nope', strict=False)
+        assert not f2.found
+        f2.load()
+        assert not f2.found
