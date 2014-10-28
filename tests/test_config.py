@@ -242,3 +242,16 @@ class TestConfig:
         assert config["USER"] == os.environ["USER"]
         assert config["PATH"] == os.environ["PATH"]
 
+
+    def test_load_merges_recursively(self):
+        d = Defaults(
+            {'TOP': {'DEFAULTKEY': 'YAY-DEFAULTS', 'SHAREDKEY': 'DEFAULTVAL'}}
+        )
+        o = Overrides(
+            {'TOP': {'OVERRIDEKEY': 'YAY-OVERRIDES', 'SHAREDKEY': 'OVERRIDEVAL'}}
+        )
+        c = Config(defaults=d, overrides=o)
+        c.load()
+        assert c['TOP']['DEFAULTKEY'] == 'YAY-DEFAULTS'
+        assert c['TOP']['OVERRIDEKEY'] == 'YAY-OVERRIDES'
+        assert c['TOP']['SHAREDKEY'] == 'OVERRIDEVAL'
