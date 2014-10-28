@@ -50,3 +50,6 @@ class File(Adapter):
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
         fd.close()
+
+    def __str__(self):
+        return "File({0!r})".format(self.filepath)
