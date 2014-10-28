@@ -13,6 +13,7 @@ from etcaetera.constants import (
 class File(Adapter):
     def __init__(self, filepath, *args, **kwargs):
         self.filepath = filepath
+        self.found = False
 
         # If strict parameter (inherited from parent) is True,
         # strictness_check routine will be called
@@ -50,3 +51,4 @@ class File(Adapter):
             raise ValueError("Unhandled file extension {0}".format(file_extension))
 
         fd.close()
+        self.found = True
