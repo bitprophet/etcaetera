@@ -270,11 +270,3 @@ class TestConfig:
         c = Config(defaults=d, overrides=o)
         with pytest.raises(AmbiguousMergeError):
             c.load()
-
-    def test_load_merging_applies_formatting_recursively(self):
-        d = Defaults({'TOP': {'SUB': 'value'}})
-        c = Config(defaults=d, formatter=lambda x: 'sentinel')
-        c.load()
-        assert 'sentinel' in c
-        assert 'SUB' not in c['sentinel']
-        assert c['sentinel']['sentinel'] == 'value'
