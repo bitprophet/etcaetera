@@ -11,6 +11,7 @@ from etcaetera.adapter import (
     File,
     Env
 )
+from etcaetera.exceptions import AmbiguousMergeError
 
 
 class TestConfig:
@@ -242,3 +243,30 @@ class TestConfig:
         assert config["USER"] == os.environ["USER"]
         assert config["PATH"] == os.environ["PATH"]
 
+
+    def test_load_merges_recursively(self):
+        d = Defaults(
+            {'TOP': {'DEFAULTKEY': 'YAY-DEFAULTS', 'SHAREDKEY': 'DEFAULTVAL'}}
+        )
+        o = Overrides(
+            {'TOP': {'OVERRIDEKEY': 'YAY-OVERRIDES', 'SHAREDKEY': 'OVERRIDEVAL'}}
+        )
+        c = Config(defaults=d, overrides=o)
+        c.load()
+        assert c['TOP']['DEFAULTKEY'] == 'YAY-DEFAULTS'
+        assert c['TOP']['OVERRIDEKEY'] == 'YAY-OVERRIDES'
+        assert c['TOP']['SHAREDKEY'] == 'OVERRIDEVAL'
+
+    def test_load_merging_refuses_to_change_type_to_dict(self):
+        d = Defaults({'TOP': 'not a dict'})
+        o = Overrides({'TOP': {'SUB': 'VALUE'}})
+        c = Config(defaults=d, overrides=o)
+        with pytest.raises(AmbiguousMergeError):
+            c.load()
+
+    def test_load_merging_refuses_to_change_type_from_dict(self):
+        d = Defaults({'TOP': {'SUB': 'VALUE'}})
+        o = Overrides({'TOP': 'not a dict'})
+        c = Config(defaults=d, overrides=o)
+        with pytest.raises(AmbiguousMergeError):
+            c.load()
