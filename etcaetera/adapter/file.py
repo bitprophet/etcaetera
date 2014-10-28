@@ -12,7 +12,7 @@ from ..constants import (
 
 class File(Adapter):
     def __init__(self, filepath, python_uppercase=True, *args, **kwargs):
-        self.filepath = filepath
+        self.filepath = os.path.expanduser(filepath)
         self.python_uppercase = python_uppercase
 
         # If strict parameter (inherited from parent) is True,

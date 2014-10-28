@@ -132,6 +132,11 @@ class TestFile:
 
         assert fadapter.data == {}
 
-
     def test_useful_str_output(self):
         assert str(File('myfilepath')) == "File('myfilepath')"
+
+    def test_filepaths_get_expanded(self):
+        # This kind of test always feels tautological, oh well
+        # NOTE: it may fail on Windows.
+        expected = os.path.join(os.path.expanduser('~'), 'foo')
+        assert File('~/foo').filepath == expected
