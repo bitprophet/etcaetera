@@ -77,9 +77,9 @@ A real world example is worth a thousand words
 Config object
 -------------
 
-The config object is the central place for your whole application settings. It loads your adapters in the order you've registered them, and updates itself using it's data.
-Furthermore you can attach sub config objects to it, in order to keep a clean configuration hierarchy.
+The config object is the central place for your whole application settings. It loads your adapters in the order you've registered them, merging the resulting data in order - including recursively, when using adapters which support nested values.
 
+You can also attach sub-config objects to it, in order to keep a clean configuration hierarchy or include configs supplied by other codebases.
 
 Please note that **Defaults** adapter will always be loaded first, and **Overrides** will always be loaded last.
 
